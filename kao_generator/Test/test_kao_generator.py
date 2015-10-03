@@ -22,3 +22,26 @@ class init(unittest.TestCase):
         
         wrapper = KaoGenerator(genFn)
         self.assertEqual(len(wrapper._queue), 0)
+
+class pop(unittest.TestCase):
+    """ Test cases of pop """
+        
+    def test_valueInQueue(self):
+        """ Test that the value from the queue is retrieved """
+        genFn = Mock(return_value=None)
+        expected = 123
+        
+        wrapper = KaoGenerator(genFn)
+        wrapper.queue(expected)
+        actual = wrapper.pop()
+        self.assertEqual(expected, actual)
+        
+    def test_noValueInQueue(self):
+        """ Test that None is returned when the queue is empty """
+        genFn = Mock(return_value=None)
+        expected = None
+        
+        wrapper = KaoGenerator(genFn)
+        self.assertEqual(len(wrapper._queue), 0)
+        actual = wrapper.pop()
+        self.assertEqual(expected, actual)
