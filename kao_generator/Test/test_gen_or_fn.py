@@ -1,6 +1,6 @@
 from .. import gen_or_fn
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 class RunGenOrFn(unittest.TestCase):
     """ Test cases of RunGenOrFn """
@@ -47,3 +47,19 @@ class RunGenOrFn(unittest.TestCase):
         for value in args:
             response = yield value
             self.responses.append(response)
+
+class GenOrFn(unittest.TestCase):
+    """ Test cases of GenOrFn """
+        
+    @patch('kao_generator.gen_or_fn.KaoGenerator')
+    def test_generatorBuilt(self, KaoGeneratorMock):
+        """ Test that the generator is built properly """
+        expected = Mock()
+        KaoGeneratorMock.return_value = expected
+        fn = Mock()
+        args = range(3)
+        kwargs = {'one': 1, 'two': 2, 'three': 3}
+        
+        actual = gen_or_fn.GenOrFn(fn, *args, **kwargs)
+        KaoGeneratorMock.assert_called_once_with(gen_or_fn.RunGenOrFn, fn, *args, **kwargs)
+        self.assertEqual(actual, expected)

@@ -10,3 +10,7 @@ def RunGenOrFn(function, *args, **kwargs):
             generator.queue(response)
     else:
         function(*args, **kwargs)
+        
+def GenOrFn(function, *args, **kwargs):
+    """ Helepr function to return a KaoGenerator wrapping the RunGenOrFn """
+    return KaoGenerator(RunGenOrFn, function, *args, **kwargs)
