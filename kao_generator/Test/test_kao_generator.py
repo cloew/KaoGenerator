@@ -23,11 +23,31 @@ class init(unittest.TestCase):
         wrapper = KaoGenerator(genFn)
         self.assertEqual(len(wrapper._queue), 0)
 
+class iter(unittest.TestCase):
+    """ Test cases of iter """
+        
+    def test_queueUsed(self):
+        """ Test that the the queue values are popped and sent to the generator """
+        items = [1,2,3,4,5]
+        queueValues = ['a', 'b', 'c', 'd', 'e']
+        
+        generator = Mock()
+        generator.send = Mock(side_effect=items)
+        genFn = Mock(return_value=generator)
+        
+        wrapper = KaoGenerator(genFn)
+        for v in queueValues:
+            wrapper.queue(v)
+            
+        for i, yieldedValue in enumerate(wrapper):
+            self.assertEqual(items[i], yieldedValue)
+            generator.send.assert_called_with(queueValues[i])
+
 class queue(unittest.TestCase):
     """ Test cases of queue """
         
     def test_appended(self):
-        """ Test that the value fis appended to the queue """
+        """ Test that the value is appended to the queue """
         genFn = Mock(return_value=None)
         expected = 123
         
