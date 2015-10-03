@@ -9,12 +9,7 @@ class KaoGenerator:
     
     def __init__(self, generatorFn, *args, **kwargs):
         """ Initialize with the generator """
-        if inspect.isgenerator(generatorFn):
-            self.generator = generatorFn
-        elif inspect.isgeneratorfunction(generatorFn):
-            self.generator = generatorFn(*args, **kwargs)
-        else:
-            raise TypeError('Received non-generator object')
+        self.generator = generatorFn(*args, **kwargs)
         self._queue = deque()
         
     def __iter__(self):
