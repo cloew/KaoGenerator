@@ -23,6 +23,19 @@ class init(unittest.TestCase):
         wrapper = KaoGenerator(genFn)
         self.assertEqual(len(wrapper._queue), 0)
 
+class queue(unittest.TestCase):
+    """ Test cases of queue """
+        
+    def test_appended(self):
+        """ Test that the value fis appended to the queue """
+        genFn = Mock(return_value=None)
+        expected = 123
+        
+        wrapper = KaoGenerator(genFn)
+        wrapper.queue(expected)
+        actual = wrapper._queue.popleft()
+        self.assertEqual(expected, actual)
+
 class pop(unittest.TestCase):
     """ Test cases of pop """
         
