@@ -27,7 +27,7 @@ class iter(unittest.TestCase):
     """ Test cases of iter """
         
     def test_queueUsed(self):
-        """ Test that the the queue values are popped and sent to the generator """
+        """ Test that the queue values are popped and sent to the generator """
         items = [1,2,3,4,5]
         queueValues = ['a', 'b', 'c', 'd', 'e']
         
@@ -42,6 +42,26 @@ class iter(unittest.TestCase):
         for i, yieldedValue in enumerate(wrapper):
             self.assertEqual(items[i], yieldedValue)
             generator.send.assert_called_with(queueValues[i])
+        
+    def test_queueEmpty(self):
+        """ Test that when the queue is empty, None is passed to the generator """
+        items = [1,2,3,4,5]
+        queueValues = ['a', 'b', 'c']
+        
+        generator = Mock()
+        generator.send = Mock(side_effect=items)
+        genFn = Mock(return_value=generator)
+        
+        wrapper = KaoGenerator(genFn)
+        for v in queueValues:
+            wrapper.queue(v)
+            
+        for i, yieldedValue in enumerate(wrapper):
+            self.assertEqual(items[i], yieldedValue)
+            if i >= len(queueValues):
+                generator.send.assert_called_with(None)
+            else:
+                generator.send.assert_called_with(queueValues[i])
 
 class queue(unittest.TestCase):
     """ Test cases of queue """
@@ -53,7 +73,7 @@ class queue(unittest.TestCase):
         
         wrapper = KaoGenerator(genFn)
         wrapper.queue(expected)
-        actual = wrapper._queue.popleft()
+        actual = wrapper._queue.pop()
         self.assertEqual(expected, actual)
 
 class pop(unittest.TestCase):
