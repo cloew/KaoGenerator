@@ -1,6 +1,9 @@
+from kao_decorators import proxy_for
+
 from collections import deque
 import inspect
 
+@proxy_for('generator', ['send', '__next__'])
 class KaoGenerator:
     """ Helper class to facilitate dealing with generators """
     
